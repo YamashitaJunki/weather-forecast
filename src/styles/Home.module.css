@@ -37,12 +37,12 @@
 }
 
 .explanation-text {
-  font-size: max(0.9vh, 7px);
+  font-size: max(1.2vh, 10px);
   max-width: 350px;
   margin: 0 auto;
 }
 .error-text {
-  font-size: max(1vh, 7px);
+  font-size: max(1vh, 10px);
   color: brown;
   max-width: 550px;
   margin: 0 auto;
@@ -85,7 +85,7 @@
   width: 34%;
   height: 100%;
   position: relative;
-  font-size: max(1.2vh, 5px);
+  font-size: max(1.5vh, 12px);
 }
 
 .current-right {
