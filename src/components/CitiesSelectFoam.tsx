@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { availableCities } from "../lib/availableCities";
-import styles from "../styles/Weather.module.css";
+import styles from "../styles/Home.module.css";
 import { CityWeather } from "../lib/WeatherInfoController";
 
 type CitiesSelectFoamIn = {
