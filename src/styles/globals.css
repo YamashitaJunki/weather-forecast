@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200);
+
 html,
 body {
   padding: 0;
@@ -23,4 +25,42 @@ a {
     color: white;
     background: black;
   }
+}
+
+.delayed-image {
+  animation: fadeIn 1s ease 0s 1 normal;
+  -webkit-animation: fadeIn 1s ease 0s 1 normal;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border: none;
+}
+td,
+th {
+  border: none;
+  border-left: 1px solid #333;
+  border-top: 1px solid #333;
+}
+
+td:first-child,
+th:first-child {
+  border-left: none;
+}
+tr:first-child td,
+tr:first-child th {
+  border-top: none;
+}
+
+button {
+  cursor: pointer;
 }
