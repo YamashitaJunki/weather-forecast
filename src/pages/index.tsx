@@ -17,6 +17,7 @@ import {
   FutureDate,
 } from "../components/DateTemplate";
 import { getIconAndBackGroundByAPI } from "../lib/weatherIconsAndBackGrounds";
+import { useRouter } from "next/router";
 
 type HomeIn = {
   weathers: CityWeather;
@@ -36,7 +37,8 @@ type GetServerSidePropsOut = {
 };
 
 const Home = ({ weathers }: HomeIn): HomeOut => {
-  const [cityIndex, setCityIndex] = useState<number>(12);
+  const [cityIndex, setCityIndex] = useState(0);
+  const router = useRouter();
   return (
     <div>
       <Head>
@@ -47,6 +49,7 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
           src={getIconAndBackGroundByAPI(weathers[cityIndex].current?.icon).src}
           layout="fill"
           objectFit="cover"
+          quality={100}
           alt="background"
         />
         <div className={styles.box}>
@@ -57,7 +60,6 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
                 setCityIndex={setCityIndex}
                 weathers={weathers}
               ></CitiesSelectFoam>
-              <div></div>
             </div>
           </div>
           <div className={styles["box-bottom"]}>
@@ -81,6 +83,19 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
               <div className={styles["current-center"]}>
                 <div className={styles["text-center"]}>
                   <div>
+                    <button
+                      className={styles["week-weather"]}
+                      onClick={() => {
+                        void router.push({
+                          pathname: "weekWeather",
+                          query: {
+                            cityIndex: cityIndex,
+                          },
+                        });
+                      }}
+                    >
+                      週間天気予報ページ
+                    </button>
                     <div>
                       {availableCities()[weathers[cityIndex].city].name}
                     </div>
