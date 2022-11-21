@@ -1,4 +1,4 @@
-import { AppException } from "../lib/AppException";
+import { getDisplayDate } from "../lib/getDisplayDate";
 
 type CurrentDateIn = {
   children: number;
@@ -12,39 +12,10 @@ type WeekDateIn = {
   children: number;
 };
 type WeekDateOut = JSX.Element;
-type GetDisplayDateIn = number;
-type GetDisplayDateOut = {
-  month: number;
-  day: number;
-  dayofweek: number;
-  hour: number;
-  minute: number;
-  second: number;
-};
-// 曜日を日〜土の漢字で表示させるための定義
-const dayname = ["日", "月", "火", "水", "木", "金", "土"];
-
-const _getDisplayDate = (time: GetDisplayDateIn): GetDisplayDateOut => {
-  try {
-    const parsed = new Date(time * 1000);
-    return {
-      month: parsed.getMonth() + 1,
-      day: parsed.getDate(),
-      dayofweek: parsed.getDay(),
-      hour: parsed.getHours(),
-      minute: parsed.getMinutes(),
-      second: parsed.getSeconds(),
-    };
-  } catch (errorMessage) {
-    throw new AppException(
-      time,
-      "DateTemplateファイルの_getDisplayDate関数に入るtimeの値が日付形式ではありません。"
-    );
-  }
-};
 
 export function CurrentDate({ children }: CurrentDateIn): CurrentDateOut {
-  const { month, day, dayofweek, hour, minute } = _getDisplayDate(children);
+  const { month, day, dayofweek, hour, minute, dayname } =
+    getDisplayDate(children);
 
   return (
     <div>
@@ -61,7 +32,7 @@ export function CurrentDate({ children }: CurrentDateIn): CurrentDateOut {
 }
 
 export function SunriseDate({ children }: CurrentDateIn): CurrentDateOut {
-  const { hour, minute } = _getDisplayDate(children);
+  const { hour, minute } = getDisplayDate(children);
 
   return (
     <div suppressHydrationWarning={true}>
@@ -71,7 +42,7 @@ export function SunriseDate({ children }: CurrentDateIn): CurrentDateOut {
 }
 
 export function SunsetDate({ children }: CurrentDateIn): CurrentDateOut {
-  const { hour, minute } = _getDisplayDate(children);
+  const { hour, minute } = getDisplayDate(children);
 
   return (
     <div suppressHydrationWarning={true}>
@@ -81,7 +52,7 @@ export function SunsetDate({ children }: CurrentDateIn): CurrentDateOut {
 }
 
 export function FutureDate({ children }: FutureDateIn): FutureDateOut {
-  const { month, day, dayofweek, hour } = _getDisplayDate(children);
+  const { month, day, dayofweek, hour, dayname } = getDisplayDate(children);
 
   return (
     <th suppressHydrationWarning={true}>
@@ -93,7 +64,7 @@ export function FutureDate({ children }: FutureDateIn): FutureDateOut {
   );
 }
 export function WeekDate({ children }: WeekDateIn): WeekDateOut {
-  const { month, day, dayofweek } = _getDisplayDate(children);
+  const { month, day, dayofweek, dayname } = getDisplayDate(children);
 
   return (
     <div>
