@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&family=M+PLUS+1p:wght@500&display=swap");
+
+.main {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  min-height: 550px;
+  font-size: 2rem;
+  text-align: center;
+  align-items: center;
+}
+
+.title {
+  font-size: max(4vh, 25px);
+  word-break: break-word;
+  white-space: normal;
+  font-family: "Abril Fatface", cursive;
+}
+
+.box {
+  position: relative;
+  max-width: 1300px;
+  left: 0;
+  right: 0;
+  padding: 0 3rem;
+  margin: auto;
+}
+
+.box-top {
+  height: 40%;
+}
+
+.top-form {
+  width: 80%;
+  height: 50%;
+  margin: 0 auto;
+  font-family: "M PLUS 1p", sans-serif;
+}
+
+.city {
+  background-color: rgb(255, 255, 255, 0.5);
+  width: 20vmax;
+  font-size: 2vmax;
+  margin: 0 auto;
+  font-family: "M PLUS 1p", sans-serif;
+}
+
+.box-bottom {
+  transform: translate(0px, 20px);
+}
+
+.bottom {
+  height: 40vh;
+  transform: translate(0, 20px);
+  background-color: rgb(255, 255, 255, 0.5);
+}
+
+.back {
+  width: 100%;
+  text-align: right;
+  transform: translate(0px, 20px);
+  font-size: 1.5vmax;
+  color: aliceblue;
+  font-family: "M PLUS 1p", sans-serif;
+}
