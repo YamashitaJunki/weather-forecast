@@ -39,7 +39,7 @@ export const CitiesSelectFoam = ({
       <input
         ref={inputEl}
         id="name"
-        type="text"
+        type="search"
         list="item"
         placeholder="例：北海道/札幌市"
         autoComplete="off"
