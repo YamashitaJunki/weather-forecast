@@ -1,15 +1,17 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { availableCities } from "../lib/availableCities";
 import styles from "../styles/Home.module.css";
-import { CityWeather } from "../lib/WeatherInfoController";
+import { current, week } from "../lib/WeatherInfoController";
 
+type weathers = current | week;
+type CitiesSelectFoamSecondIn = weathers;
 type CitiesSelectFoamIn = {
   setCityIndex: Dispatch<SetStateAction<number>>;
-  weathers: CityWeather;
+  weathers: Array<CitiesSelectFoamSecondIn>;
 };
 type CitiesSelectFoamOut = JSX.Element;
 type getIndexInFirst = string | undefined;
-type getIndexInSecond = CityWeather;
+type getIndexInSecond = Array<weathers>;
 type getIndexOut = number;
 
 const citiesList = availableCities();
@@ -37,9 +39,9 @@ export const CitiesSelectFoam = ({
       <input
         ref={inputEl}
         id="name"
-        type="text"
+        type="search"
         list="item"
-        placeholder="例：東京都/新宿区"
+        placeholder="例：北海道/札幌市"
         autoComplete="off"
       />
       <datalist id="item">

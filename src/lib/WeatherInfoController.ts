@@ -1,7 +1,9 @@
 import { getWeatherInfo, getWeekWeatherInfo } from "./getWeatherInfo";
-import { AppException } from "../lib/AppException";
+import { AppException } from "./AppException";
+import { getDisplayDate } from "./getDisplayDate";
+import { getIconAndBackGroundByAPI } from "./weatherIconsAndBackGrounds";
 
-export type CityWeather = Array<{
+export type current = {
   city: string;
   current: GetWeatherInfoCurrent;
   futures: Array<{
@@ -12,13 +14,15 @@ export type CityWeather = Array<{
       measure: number;
     };
   }>;
-}>;
+};
+
+export type CityWeather = Array<current>;
 
 export type FilterWeatherInfos = Array<{
   fetchedDate: number;
 }>;
 
-type CurrentFuture = {
+export type CurrentFuture = {
   icon: string;
   iconDescription: string;
   temperature: {
@@ -41,13 +45,9 @@ export type GetWeatherInfoCurrent = {
   sunset: number;
 };
 
-type cityWeatherControllerOut = Array<{
-  city: string;
-  current: GetWeatherInfoCurrent;
-  futures: Array<CurrentFuture>;
-}>;
+type cityWeatherControllerOut = CityWeather;
 
-type WeekFuture = {
+export type WeekFuture = {
   icon: string;
   iconDescription: string;
   temperature: {
@@ -57,21 +57,55 @@ type WeekFuture = {
   fetchedDate: number;
 };
 
-type cityWeekWeatherControllerOut = Array<{
+export type week = {
   city: string;
   futures: Array<WeekFuture>;
   currentTimes: number;
   data: {
-    labels: Array<Array<number>>;
+    labels: Array<string>;
     datasets: Array<{
-      data: {
-        labels: Array<number>;
-      };
+      data: Array<number>;
+      label: string;
+      borderWidth: number;
+      borderColor: string;
     }>;
   };
-}>;
+  options: {
+    plugins: {
+      datalabels: {
+        align: string;
+        font: { size: number };
+        color: string;
+      };
+    };
+    layout: {
+      padding: {
+        right: number;
+      };
+    };
+    responsive: boolean;
+    maintainAspectRatio: boolean;
+    scales: {
+      y: {
+        title: {
+          display: boolean;
+          text: string;
+          font: {
+            size: number;
+          };
+        };
+      };
+    };
+  };
+};
 
+export type CityWeekWeather = Array<week>;
+
+type CityWeekWeatherControllerOut = CityWeekWeather;
 type FilterWeatherInfosBetweenCurrentTimeToSecondIn = number;
+
+type WeekDateIn = number;
+type WeekDateOut = string;
 
 export class CityWeatherController {
   static async excute(): Promise<cityWeatherControllerOut> {
@@ -119,8 +153,9 @@ export class CityWeatherController {
     return result;
   }
 }
+
 export class CityWeekWeatherController {
-  static async excute(): Promise<cityWeekWeatherControllerOut> {
+  static async excute(): Promise<CityWeekWeatherControllerOut> {
     const responses = await getWeekWeatherInfo();
     const result = responses.map(({ city, future }) => {
       const weatherInfos = future.daily.map((weatherInfo) => {
@@ -139,32 +174,70 @@ export class CityWeekWeatherController {
         weatherInfos,
         24 * 60 * 60 * 7
       );
-      if (futures.length !== 7) {
-        throw new AppException(
-          futures.length,
-          "明日以降、1週間以内のデータで正しくフィルターできていない可能性あり、またはAPI取得元が7日後までのデータから仕様が変わった可能性あり"
-        );
-      }
+      // if (futures.length !== 7) {
+      //   throw new AppException(
+      //     futures.length,
+      //     "明日以降、1週間以内のデータで正しくフィルターできていない可能性あり、またはAPI取得元が7日後までのデータから仕様が変わった可能性あり"
+      //   );
+      // }
 
       const data = {
         labels: futures.map((day) => {
-          return [day.fetchedDate];
+          const date = WeekDate(day.fetchedDate);
+          const detail = getIconAndBackGroundByAPI(day.icon).iconDetail;
+          const label = `${date} ${detail}`;
+          return label;
         }),
         datasets: [
           {
-            data: {
-              labels: futures.map((day) => {
-                return day.temperature.maxMeasure;
-              }),
-            },
+            data: futures.map((day) => {
+              return day.temperature.maxMeasure;
+            }),
+            label: "最高気温",
+            borderWidth: 1,
+            borderColor: "rgb(255,0,0)",
+          },
+          {
+            data: futures.map((day) => {
+              return day.temperature.minMeasure;
+            }),
+            label: "最低気温",
+            borderWidth: 1,
+            borderColor: "rgb(39,9,236)",
           },
         ],
       };
+
+      const options = {
+        plugins: {
+          datalabels: {
+            align: "right",
+            font: { size: 15 },
+            color: "black",
+          },
+        },
+        layout: { padding: { right: 50 } },
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: "気温(℃)",
+              font: {
+                size: 20,
+              },
+            },
+          },
+        },
+      };
+
       return {
         city: city,
         futures: futures,
         currentTimes: currentTimes,
         data: data,
+        options: options,
       };
     });
     return result;
@@ -202,3 +275,9 @@ const _filterWeatherInfosBetweenCurrentTimeTo = <
 
   return filteredWeatherInfos;
 };
+
+function WeekDate(fetchedDate: WeekDateIn): WeekDateOut {
+  const { month, day, dayofweek, dayname } = getDisplayDate(fetchedDate);
+  const date = `${month}/${day}/(${dayname[dayofweek]})`;
+  return date;
+}
