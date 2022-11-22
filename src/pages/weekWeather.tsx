@@ -42,7 +42,7 @@ const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
       </Head>
       <main className={`${styles.main} delayed-image`}>
         <Image
-          src={"/weekWeather.jpeg"}
+          src="/weekWeather.jpeg"
           layout="fill"
           objectFit="cover"
           quality={100}
