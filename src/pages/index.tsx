@@ -1,10 +1,6 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import {
-  CityWeatherController,
-  GetWeatherInfoCurrent,
-  CityWeather,
-} from "../lib/WeatherInfoController";
+import { CityWeatherController, Current } from "../lib/WeatherInfoController";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { availableCities } from "../lib/availableCities";
@@ -20,24 +16,18 @@ import { getIconAndBackGroundByAPI } from "../lib/weatherIconsAndBackGrounds";
 import { useRouter } from "next/router";
 
 type HomeIn = {
-  weathers: CityWeather;
+  weathers: { [key: string]: Current };
 };
 type HomeOut = JSX.Element;
 
 type GetServerSidePropsOut = {
   props: {
-    weathers: Array<{
-      city: string;
-      current: GetWeatherInfoCurrent;
-      futures: Array<{
-        fetchedDate: number;
-      }>;
-    }>;
+    weathers: { [key: string]: Current };
   };
 };
 
 const Home = ({ weathers }: HomeIn): HomeOut => {
-  const [cityIndex, setCityIndex] = useState(0);
+  const [cityIndex, setCityIndex] = useState("sapporo");
   const router = useRouter();
   return (
     <div>
@@ -56,10 +46,7 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
           <div className={styles["box-top"]}>
             <h3 className={styles.title}>WeatherForecast</h3>
             <div className={styles["top-form"]}>
-              <CitiesSelectFoam
-                setCityIndex={setCityIndex}
-                weathers={weathers}
-              ></CitiesSelectFoam>
+              <CitiesSelectFoam setCityIndex={setCityIndex}></CitiesSelectFoam>
             </div>
           </div>
           <div className={styles["box-bottom"]}>
@@ -162,7 +149,6 @@ export default Home;
 export const getServerSideProps: GetServerSideProps =
   async (): Promise<GetServerSidePropsOut> => {
     const weathers = await CityWeatherController.excute();
-
     return {
       props: {
         weathers,

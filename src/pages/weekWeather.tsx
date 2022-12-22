@@ -1,9 +1,6 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import {
-  CityWeekWeatherController,
-  CityWeekWeather,
-} from "../lib/WeatherInfoController";
+import { CityWeekWeatherController, Week } from "../lib/WeatherInfoController";
 import styles from "../styles/WeekWeather.module.css";
 import Image from "next/image";
 import { availableCities } from "../lib/availableCities";
@@ -22,18 +19,18 @@ Chart.register(ChartDataLabels);
 
 type GetServerSidePropsOut = {
   props: {
-    weathers: CityWeekWeather;
+    weathers: { [key: string]: Week };
   };
 };
 
 type WeekWeatherIn = {
-  weathers: CityWeekWeather;
+  weathers: { [key: string]: Week };
 };
 type WeekWeatherOut = JSX.Element;
 
 const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
   const router = useRouter();
-  const [cityIndex, setCityIndex] = useState(Number(router.query.cityIndex));
+  const [cityIndex, setCityIndex] = useState(String(router.query.cityIndex));
 
   return (
     <div>
@@ -55,10 +52,7 @@ const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
               <div>Forecast</div>
             </h3>
             <div className={styles["top-form"]}>
-              <CitiesSelectFoam
-                setCityIndex={setCityIndex}
-                weathers={weathers}
-              ></CitiesSelectFoam>
+              <CitiesSelectFoam setCityIndex={setCityIndex}></CitiesSelectFoam>
             </div>
           </div>
           <div className={styles["box-bottom"]}>

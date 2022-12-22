@@ -1,23 +1,17 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { availableCities } from "../lib/availableCities";
 import styles from "../styles/Home.module.css";
-import { current, week } from "../lib/WeatherInfoController";
 
-type weathers = current | week;
-type CitiesSelectFoamSecondIn = weathers;
 type CitiesSelectFoamIn = {
-  setCityIndex: Dispatch<SetStateAction<number>>;
-  weathers: Array<CitiesSelectFoamSecondIn>;
+  setCityIndex: Dispatch<SetStateAction<string>>;
 };
 type CitiesSelectFoamOut = JSX.Element;
-type getIndexInFirst = string | undefined;
-type getIndexInSecond = Array<weathers>;
-type getIndexOut = number;
+type getPrefNameInFirst = string | undefined;
+type getPrefNameOut = string;
 
 const citiesList = availableCities();
 export const CitiesSelectFoam = ({
   setCityIndex,
-  weathers,
 }: CitiesSelectFoamIn): CitiesSelectFoamOut => {
   const [error, seterror] = useState("");
   const inputEl = useRef<HTMLInputElement>(null);
@@ -27,7 +21,7 @@ export const CitiesSelectFoam = ({
       (city) => citiesList[city].name === value
     );
     if (includeList.length === 1) {
-      setCityIndex(getIndex(value, weathers));
+      setCityIndex(getPrefName(value));
       seterror("");
     } else if (includeList.length !== 1) {
       seterror("正しく都道府県を入力してください");
@@ -62,16 +56,12 @@ export const CitiesSelectFoam = ({
   );
 };
 
-const getIndex = (
-  name: getIndexInFirst,
-  weathers: getIndexInSecond
-): getIndexOut => {
-  let reading: undefined | string;
+const getPrefName = (name: getPrefNameInFirst): getPrefNameOut => {
+  let reading = "";
   Object.entries(citiesList).forEach((city) => {
     if (name == city[1].name) {
       reading = city[0];
     }
   });
-  const index = weathers.findIndex(({ city }) => city === reading);
-  return index;
+  return reading;
 };
