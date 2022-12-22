@@ -3,7 +3,7 @@ import { AppException } from "./AppException";
 import { getDisplayDate } from "./getDisplayDate";
 import { getIconAndBackGroundByAPI } from "./weatherIconsAndBackGrounds";
 
-export type current = {
+export type Current = {
   city: string;
   current: GetWeatherInfoCurrent;
   futures: Array<{
@@ -15,8 +15,6 @@ export type current = {
     };
   }>;
 };
-
-export type CityWeather = Array<current>;
 
 export type FilterWeatherInfos = Array<{
   fetchedDate: number;
@@ -31,7 +29,7 @@ export type CurrentFuture = {
   fetchedDate: number;
 };
 
-export type GetWeatherInfoCurrent = {
+type GetWeatherInfoCurrent = {
   fetchedDate: number;
   icon: string;
   iconDescription: string;
@@ -45,7 +43,7 @@ export type GetWeatherInfoCurrent = {
   sunset: number;
 };
 
-type cityWeatherControllerOut = CityWeather;
+type cityWeatherControllerOut = { [key: string]: Current };
 
 export type WeekFuture = {
   icon: string;
@@ -57,7 +55,7 @@ export type WeekFuture = {
   fetchedDate: number;
 };
 
-export type week = {
+export type Week = {
   city: string;
   futures: Array<WeekFuture>;
   currentTimes: number;
@@ -99,9 +97,8 @@ export type week = {
   };
 };
 
-export type CityWeekWeather = Array<week>;
+type CityWeekWeatherControllerOut = { [key: string]: Week };
 
-type CityWeekWeatherControllerOut = CityWeekWeather;
 type FilterWeatherInfosBetweenCurrentTimeToSecondIn = number;
 
 type WeekDateIn = number;
@@ -150,7 +147,11 @@ export class CityWeatherController {
       };
     });
 
-    return result;
+    const dataBox = {} as { [key: string]: Current };
+    for (let i = 0; i < result.length; i++) {
+      dataBox[result[i].city] = result[i];
+    }
+    return dataBox;
   }
 }
 
@@ -174,12 +175,6 @@ export class CityWeekWeatherController {
         weatherInfos,
         24 * 60 * 60 * 7
       );
-      // if (futures.length !== 7) {
-      //   throw new AppException(
-      //     futures.length,
-      //     "明日以降、1週間以内のデータで正しくフィルターできていない可能性あり、またはAPI取得元が7日後までのデータから仕様が変わった可能性あり"
-      //   );
-      // }
 
       const data = {
         labels: futures.map((day) => {
@@ -240,7 +235,11 @@ export class CityWeekWeatherController {
         options: options,
       };
     });
-    return result;
+    const dataBox = {} as { [key: string]: Week };
+    for (let i = 0; i < result.length; i++) {
+      dataBox[result[i].city] = result[i];
+    }
+    return dataBox;
   }
 }
 
