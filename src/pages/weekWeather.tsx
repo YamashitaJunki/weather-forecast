@@ -38,13 +38,7 @@ const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
         <title>１週間の天気予報</title>
       </Head>
       <main className={`${styles.main} delayed-image`}>
-        <Image
-          src="/weekWeather.jpeg"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          alt="背景画像"
-        />
+        <Image src="/weekWeather.jpeg" layout="fill" objectFit="cover" quality={100} alt="背景画像" />
         <div className={styles.box}>
           <div className={styles["box-top"]}>
             <h3 className={styles.title}>
@@ -56,18 +50,9 @@ const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
             </div>
           </div>
           <div className={styles["box-bottom"]}>
-            <div className={styles.city}>
-              {availableCities()[weathers[cityIndex].city].name}
-            </div>
+            <div className={styles.city}>{availableCities()[weathers[cityIndex].city].name}</div>
             <div className={styles["bottom"]}>
-              <Line
-                data={weathers[cityIndex].data}
-                options={
-                  weathers[cityIndex].options as _DeepPartialObject<
-                    CoreChartOptions<"line">
-                  >
-                }
-              />
+              <Line data={weathers[cityIndex].data} options={weathers[cityIndex].options as _DeepPartialObject<CoreChartOptions<"line">>} />
               <div className={styles.back}>
                 <Link href="/">←本日の天気予報ページに戻る</Link>
               </div>
@@ -80,13 +65,12 @@ const WeekWeather = ({ weathers }: WeekWeatherIn): WeekWeatherOut => {
 };
 export default WeekWeather;
 
-export const getServerSideProps: GetServerSideProps =
-  async (): Promise<GetServerSidePropsOut> => {
-    const weathers = await CityWeekWeatherController.excute();
+export const getServerSideProps: GetServerSideProps = async (): Promise<GetServerSidePropsOut> => {
+  const weathers = await CityWeekWeatherController();
 
-    return {
-      props: {
-        weathers,
-      },
-    };
+  return {
+    props: {
+      weathers,
+    },
   };
+};

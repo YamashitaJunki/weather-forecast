@@ -6,12 +6,7 @@ import Image from "next/image";
 import { availableCities } from "../lib/availableCities";
 import { useState } from "react";
 import { CitiesSelectFoam } from "../components/CitiesSelectFoam";
-import {
-  CurrentDate,
-  SunriseDate,
-  SunsetDate,
-  FutureDate,
-} from "../components/DateTemplate";
+import { CurrentDate, SunriseDate, SunsetDate, FutureDate } from "../components/DateTemplate";
 import { getIconAndBackGroundByAPI } from "../lib/weatherIconsAndBackGrounds";
 import { useRouter } from "next/router";
 
@@ -54,16 +49,8 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
               <div className={styles["current-left"]}>
                 <div className={styles["left-measure"]}>
                   <div className={styles["text-left"]}>
-                    <div>
-                      {weathers[cityIndex].current.temperature.measure}℃
-                    </div>
-                    <div className={styles.detail}>
-                      {
-                        getIconAndBackGroundByAPI(
-                          weathers[cityIndex].current?.icon
-                        ).iconDetail
-                      }
-                    </div>
+                    <div>{weathers[cityIndex].current.temperature.measure}℃</div>
+                    <div className={styles.detail}>{getIconAndBackGroundByAPI(weathers[cityIndex].current?.icon).iconDetail}</div>
                   </div>
                 </div>
               </div>
@@ -83,13 +70,9 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
                     >
                       週間天気予報ページ
                     </button>
+                    <div>{availableCities()[weathers[cityIndex].city].name}</div>
                     <div>
-                      {availableCities()[weathers[cityIndex].city].name}
-                    </div>
-                    <div>
-                      <CurrentDate>
-                        {weathers[cityIndex].current.fetchedDate}
-                      </CurrentDate>
+                      <CurrentDate>{weathers[cityIndex].current.fetchedDate}</CurrentDate>
                     </div>
                   </div>
                 </div>
@@ -97,14 +80,9 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
               <div className={styles["current-right"]}>
                 <div className={styles["text-right"]}>
                   <div>風速:{weathers[cityIndex].current.windSpeed}m/s</div>
-                  <SunriseDate>
-                    {weathers[cityIndex].current.sunrise}
-                  </SunriseDate>
+                  <SunriseDate>{weathers[cityIndex].current.sunrise}</SunriseDate>
                   <SunsetDate>{weathers[cityIndex].current.sunset}</SunsetDate>
-                  <div>
-                    体感温度:{weathers[cityIndex].current.temperature.feelsLike}
-                    ℃
-                  </div>
+                  <div>体感温度:{weathers[cityIndex].current.temperature.feelsLike}℃</div>
                 </div>
               </div>
             </div>
@@ -113,9 +91,7 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
                 <thead>
                   <tr>
                     {weathers[cityIndex].futures.map((day) => {
-                      return (
-                        <FutureDate key="index">{day.fetchedDate}</FutureDate>
-                      );
+                      return <FutureDate key="index">{day.fetchedDate}</FutureDate>;
                     })}
                   </tr>
                   <tr>
@@ -127,9 +103,7 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
                     {weathers[cityIndex].futures.map((day) => {
                       return (
                         <td key="index">
-                          <div className="material-symbols-outlined">
-                            {getIconAndBackGroundByAPI(day.icon).iconKey}
-                          </div>
+                          <div className="material-symbols-outlined">{getIconAndBackGroundByAPI(day.icon).iconKey}</div>
                         </td>
                       );
                     })}
@@ -146,12 +120,11 @@ const Home = ({ weathers }: HomeIn): HomeOut => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps =
-  async (): Promise<GetServerSidePropsOut> => {
-    const weathers = await CityWeatherController.excute();
-    return {
-      props: {
-        weathers,
-      },
-    };
+export const getServerSideProps: GetServerSideProps = async (): Promise<GetServerSidePropsOut> => {
+  const weathers = await CityWeatherController();
+  return {
+    props: {
+      weathers,
+    },
   };
+};
