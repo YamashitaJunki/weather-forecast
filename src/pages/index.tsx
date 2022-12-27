@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { CityWeatherController, Current } from "../lib/WeatherInfoController";
+import { CityWeatherController, Current } from "../lib/weatherInfoController";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import { availableCities } from "../lib/availableCities";
